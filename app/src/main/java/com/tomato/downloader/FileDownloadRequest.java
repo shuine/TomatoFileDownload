@@ -1,4 +1,4 @@
-package com.tomato.download;
+package com.tomato.downloader;
 
 /**
  * @author yeshuxin on 16-10-22.
@@ -6,9 +6,6 @@ package com.tomato.download;
 
 public class FileDownloadRequest implements Comparable<FileDownloadRequest>{
 
-    public static final int PRIORITY_LOW = 1000;
-    public static final int PRIORITY_NORMAL = 1001;
-    public static final int PRIORITY_HIGH = 1002;
 
     private FileInfo mFileInfo;
     private DownloadCallback mDownloadCallback;

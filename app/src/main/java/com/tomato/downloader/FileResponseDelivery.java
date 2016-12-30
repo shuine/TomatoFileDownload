@@ -1,4 +1,4 @@
-package com.tomato.download;
+package com.tomato.downloader;
 
 import android.os.Handler;
 
@@ -38,6 +38,11 @@ public class FileResponseDelivery implements ResponseDelivery{
 
     @Override
     public void postError(FileDownloadRequest request, String error) {
+
+    }
+
+    @Override
+    public void postCallBack(FileDownloadRequest request, DownloadCallback callback) {
 
     }
 

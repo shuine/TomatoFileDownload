@@ -1,4 +1,4 @@
-package com.tomato.download;
+package com.tomato.downloader;
 
 import java.net.HttpURLConnection;
 import java.util.Map;

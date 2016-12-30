@@ -1,6 +1,8 @@
-package com.tomato.download;
+package com.tomato.downloader;
 
 import android.text.TextUtils;
+
+import com.tomato.utils.FileUtil;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -47,25 +49,10 @@ public class FileDownloadNetwork implements INetwork {
             // TODO: 16-10-22 set default path
         }
 
-        File tempFile = new File(mTempFilePath);
-
+        File tempFile = FileUtil.getNewFileName(mFileInfo.getFilePath(),mFileInfo.getFileName(),".temp");
         try {
-            if(!tempFile.exists()){
-                if(tempFile.getParentFile() == null){
-                    downloadFail(0,"File path is error");
-                    return null;
-                }
-                File parentFile = new File(tempFile.getParent());
-                if(parentFile.exists()){
-                    tempFile.createNewFile();
-                }else {
-                    boolean result = parentFile.mkdirs();
-                    if(result){
-                        tempFile.createNewFile();
-                    }
-                }
-            }
-        }catch (IOException err){
+            tempFile = FileUtil.createNewFile(tempFile);
+        }catch (IOException e){
             downloadFail(0,"File create fail");
         }
 

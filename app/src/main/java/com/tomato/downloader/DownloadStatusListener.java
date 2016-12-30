@@ -1,4 +1,4 @@
-package com.tomato.download;
+package com.tomato.downloader;
 
 /**
  * @author yeshuxin on 16-10-22.

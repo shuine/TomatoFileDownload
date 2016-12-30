@@ -11,10 +11,11 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:id="@+id/download_tv"
-        android:maxLines="15"
         android:layout_marginTop="50dp"
+        android:maxLines="20000"
+        android:scrollbars="vertical"
         android:text="Hello World!" />
 
     <LinearLayout
@@ -32,6 +33,20 @@
             android:layout_centerHorizontal="true"
             android:layout_marginRight="10dp"
             android:text="start"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/download_btn_pasue"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="10dp"
+            android:text="pause"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/download_btn_resume"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="10dp"
+            android:text="resume"/>
     </LinearLayout>
 
 

@@ -1,4 +1,4 @@
-package com.tomato.download;
+package com.tomato.downloader;
 
 import java.util.ArrayList;
 import java.util.HashSet;

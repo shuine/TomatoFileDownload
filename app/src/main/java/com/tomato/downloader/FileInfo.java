@@ -1,4 +1,4 @@
-package com.tomato.download;
+package com.tomato.downloader;
 
 /**
  * @author yeshuxin on 16-10-22.
@@ -10,6 +10,7 @@ public class FileInfo {
     String mUrl;
     String mFileName;
     String mPath;
+    String mMD5;
 
     public String getTag(){
         return mFileTag;
@@ -20,9 +21,11 @@ public class FileInfo {
     public String getFileName(){
         return mFileName;
     }
-
     public String getFilePath(){
         return mPath;
+    }
+    public String getMD5(){
+        return mMD5;
     }
     public void setFileName(String name){
         mFileName = name;

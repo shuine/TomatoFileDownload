@@ -1,4 +1,4 @@
-package com.tomato.download;
+package com.tomato.downloader;
 
 import android.content.Context;
 import android.os.Handler;

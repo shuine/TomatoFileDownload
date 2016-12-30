@@ -1,4 +1,4 @@
-package com.tomato.download;
+package com.tomato.downloader;
 
 import android.os.Process;
 
@@ -8,7 +8,7 @@ import java.util.concurrent.BlockingQueue;
  * @author yeshuxin on 16-10-25.
  */
 
-public class NetworkThread extends Thread {
+public class NetworkThread extends Thread implements DownloadCallback{
 
     private BlockingQueue<FileDownloadRequest> mQueue;
     private INetwork mDownload;
@@ -41,7 +41,7 @@ public class NetworkThread extends Thread {
                 continue;
             }
 
-            NetworkResponse networkResponse = mDownload.performFileDownload(request,null);
+            NetworkResponse networkResponse = mDownload.performFileDownload(request,this);
             mDelivery.postResponse(request,new FileResponse());
         }
     }
@@ -49,5 +49,25 @@ public class NetworkThread extends Thread {
     public void quit(){
         mQuit = true;
         interrupt();
+    }
+
+    @Override
+    public void onDownloadUpdate(FileInfo info, long currentLength, long totalLength) {
+
+    }
+
+    @Override
+    public void onDownloadComplete(FileInfo info) {
+
+    }
+
+    @Override
+    public void onDownloadFail(FileInfo info, int errorType) {
+
+    }
+
+    @Override
+    public void onDownloadSuccess(FileInfo info) {
+
     }
 }
