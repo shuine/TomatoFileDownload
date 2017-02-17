@@ -6,12 +6,12 @@ package com.tomato.shine;
 
 public class ErrorFactory {
     public static ErrorType getDownloadFailError(String msg) {
-        return new ErrorType(ErrorType.ERROR_DOWNLOAD_FAIL, msg);
+        return new ErrorType(ErrorType.ERROR_CREATE_FILE, msg);
 
     }
 
     public static ErrorType getMd5CheckFailError(String msg) {
-        return new ErrorType(ErrorType.ERROR_MD5_FAIL, msg);
+        return new ErrorType(ErrorType.ERROR_CHK_MD5, msg);
     }
 
     public static ErrorType getOtherType(String msg) {

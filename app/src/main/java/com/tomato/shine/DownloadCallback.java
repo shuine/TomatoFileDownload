@@ -14,4 +14,8 @@ public interface DownloadCallback {
 
     //下载失败
     void onDownloadFail(String fileId,ErrorType error);
+
+    void onDownloadStart(String fileId,String filePath);
+
+    void onDownloadPause(String fileId,String filePaht);
 }

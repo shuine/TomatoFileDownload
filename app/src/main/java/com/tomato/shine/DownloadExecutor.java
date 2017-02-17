@@ -39,7 +39,7 @@ public class DownloadExecutor implements DownloadStatusListener{
             try {
                 FileDownloadRequest request = mRequestQueue.take();
                 DownloadRunnable runnable = new DownloadRunnable(request, this);
-                mDispatcher.enqueue(runnable);
+                mDispatcher.enqueue(runnable,false);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -118,20 +118,20 @@ public class DownloadExecutor implements DownloadStatusListener{
         if (task == null) {
             return;
         }
-        boolean willRetry = mDispatcher.failTask(task);
+        boolean willRetry = mDispatcher.failTask(task,error);
         if (!willRetry) {
             final ErrorType errorType;
             switch (error) {
-                case DownloadRunnable.ERROR_CREATE_FILE:
+                case ErrorType.ERROR_CREATE_FILE:
                     errorType = ErrorFactory.getOtherType("文件创建失败 " + msg);
                     break;
-                case DownloadRunnable.ERROR_INVALID_PARAM:
+                case ErrorType.ERROR_INVALID_PARAM:
                     errorType = ErrorFactory.getOtherType("参数错误 " + msg);
                     break;
-                case DownloadRunnable.ERROR_NETWORK:
+                case ErrorType.ERROR_NETWORK:
                     errorType = ErrorFactory.getDownloadFailError("网络错误 " + msg);
                     break;
-                case DownloadRunnable.ERROR_CHK_MD5:
+                case ErrorType.ERROR_CHK_MD5:
                     errorType = ErrorFactory.getMd5CheckFailError("md5校验错误 " + msg);
                     break;
                 default:
@@ -175,12 +175,36 @@ public class DownloadExecutor implements DownloadStatusListener{
 
     @Override
     public void onDownloadPause(DownloadRunnable task) {
+        if (task.getRequest() != null) {
+            final DownloadCallback callback = task.getRequest().getCallback();
+            final DownloadTaskInfo taskInfo = task.getTaskInfo();
+            if (callback != null && taskInfo != null) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onDownloadPause(taskInfo.getFileId(), taskInfo.getFilePath());
+                    }
+                });
+            }
 
+        }
     }
 
     @Override
     public void onDownloadStart(DownloadRunnable task) {
+        if (task.getRequest() != null) {
+            final DownloadCallback callback = task.getRequest().getCallback();
+            final DownloadTaskInfo taskInfo = task.getTaskInfo();
+            if (callback != null && taskInfo != null) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onDownloadStart(taskInfo.getFileId(), taskInfo.getFilePath());
+                    }
+                });
+            }
 
+        }
     }
 
     public Context getContext(){

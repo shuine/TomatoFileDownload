@@ -9,8 +9,6 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 
-import static android.R.attr.priority;
-
 /**
  * @author yeshuxin on 17-1-10.
  *         下载入口类,网络监听和下载控制
@@ -60,7 +58,7 @@ public class Downloader {
 
     }
 
-    private void resumeDownload() {
+    private void resumeWifiDownload() {
         mExecutor.resumeWifiOnlyAllRequest();
     }
 
@@ -71,7 +69,7 @@ public class Downloader {
         return mExecutor.resumeRequest(info);
     }
 
-    private void pauseDownload() {
+    private void pauseWifiDownload() {
         mExecutor.pauseWifiOnlyRequest();
     }
 
@@ -85,9 +83,9 @@ public class Downloader {
     private void networkStateChanged(boolean isWifiOn) {
         //处于Wifi连接状态
         if (isWifiOn) {
-            resumeDownload();
+            resumeWifiDownload();
         } else {
-            pauseDownload();
+            pauseWifiDownload();
         }
     }
 

@@ -13,22 +13,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static com.tomato.shine.ErrorType.ERROR_CHK_MD5;
+import static com.tomato.shine.ErrorType.ERROR_CREATE_FILE;
+import static com.tomato.shine.ErrorType.ERROR_INVALID_PARAM;
+import static com.tomato.shine.ErrorType.ERROR_NETWORK;
+
 /**
  * @author yeshuxin on 17-1-9.
  */
 
 public class DownloadRunnable implements Runnable,Comparable<DownloadRunnable> {
-    //创建文件失败
-    public static final int ERROR_CREATE_FILE = 0x001;
 
-    //不合法的参数
-    public static final int ERROR_INVALID_PARAM = 0x002;
-
-    //md5校验错误
-    public static final int ERROR_CHK_MD5 = 0x003;
-
-    //网络错误
-    public static final int ERROR_NETWORK = 0x004;
 
     private FileDownloadRequest mRequest;
 
@@ -115,6 +110,7 @@ public class DownloadRunnable implements Runnable,Comparable<DownloadRunnable> {
             return;
         }
 
+        downloadStart();
         long fileLength = savedFile.length();
         FileOutputStream outFile = null;
         HttpURLConnection httpURLConnection = null;
@@ -158,6 +154,8 @@ public class DownloadRunnable implements Runnable,Comparable<DownloadRunnable> {
                 } else {
                     downloadFail(ERROR_NETWORK, "");
                 }
+            }else {
+               downloadPause();
             }
 
         } catch (FileNotFoundException e) {
@@ -174,11 +172,7 @@ public class DownloadRunnable implements Runnable,Comparable<DownloadRunnable> {
             e.printStackTrace();
             downloadFail(ERROR_CREATE_FILE, e.getMessage());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            downloadFail(ERROR_CREATE_FILE, e.getMessage());
-
-        }finally {
+        } finally {
             if (outFile != null) {
                 try {
                     outFile.close();
@@ -232,15 +226,15 @@ public class DownloadRunnable implements Runnable,Comparable<DownloadRunnable> {
      * 下载开始
      */
     private void downloadStart(){
-
+        if (this.mStatusListener != null) {
+            this.mStatusListener.onDownloadStart(this);
+        }
     }
 
     private void downloadPause(){
-
-    }
-
-    private void downloadResume(){
-
+        if (this.mStatusListener != null) {
+            this.mStatusListener.onDownloadPause(this);
+        }
     }
 
     /**

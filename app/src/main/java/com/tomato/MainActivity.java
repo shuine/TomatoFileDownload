@@ -116,10 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.download_btn_first_start:
-//                downloadPlugin(info1);
-                Intent intent = new Intent(this,TomotoService.class);
-                intent.setAction("com.tomoto.shine.TOMOTO_SERVICE");
-                startService(intent);
+                downloadPlugin(info1);
                 break;
             case R.id.download_btn_first_pause:
                 client.pauseFileDownlaod(info1);
@@ -154,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initData(){
 
         info1 = new DownloadTaskInfo(url,path+"info1.zip","info1");
-        info2 = new DownloadTaskInfo(aurl,path+"info2.zip","info2");
-        info3 = new DownloadTaskInfo(aurl,path+"info3.zip","info3");
+        info2 = new DownloadTaskInfo(url,path+"info2.zip","info2");
+        info3 = new DownloadTaskInfo(url,path+"info3.zip","info3");
 
     }
 
@@ -174,10 +171,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int mPer = (int)(percent * 100);
             if(fileId.equals(info1.getFileId())){
                 mPbFirst.setProgress(mPer);
+                mTvFirstTitle.setText("下载中:"+mPer);
             }else if(fileId.equals(info2.getFileId())){
                 mPbSecond.setProgress(mPer);
+                mTvSecondTitle.setText("下载中:"+mPer);
             }else if(fileId.equals(info3.getFileId())){
                 mPbThird.setProgress(mPer);
+                mTvSecondTitle.setText("下载中:"+mPer);
             }
         }
     }
@@ -208,6 +208,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mTvSecondTitle.setText("Fail");
             }else if(fileId.equals(info3.getFileId())){
                 mTvThirdTitle.setText("Fail");
+            }
+        }
+    }
+
+    @Override
+    public void onDownloadStart(String fileId, String filePath) {
+        if(!TextUtils.isEmpty(fileId)){
+            if(fileId.equals(info1.getFileId())){
+                mTvFirstTitle.setText("DownloadStart");
+            }else if(fileId.equals(info2.getFileId())){
+                mTvSecondTitle.setText("DownloadStart");
+            }else if(fileId.equals(info3.getFileId())){
+                mTvThirdTitle.setText("DownloadStart");
+            }
+        }
+    }
+
+    @Override
+    public void onDownloadPause(String fileId, String filePaht) {
+        if(!TextUtils.isEmpty(fileId)){
+            if(fileId.equals(info1.getFileId())){
+                mTvFirstTitle.setText("DownloadPause");
+            }else if(fileId.equals(info2.getFileId())){
+                mTvSecondTitle.setText("DownloadPause");
+            }else if(fileId.equals(info3.getFileId())){
+                mTvThirdTitle.setText("DownloadPause");
             }
         }
     }

@@ -47,8 +47,8 @@ public class FileDownloadRequest implements Comparable<FileDownloadRequest>{
     }
 
     public boolean isWifiOnly() {
-        if (mConfig != null) {
-            return mConfig.isWifiOnly;
+        if (mTaskInfo != null) {
+            return mTaskInfo.isWifiOnly();
         }
         return false;
     }

@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 
+import static android.R.attr.id;
+
 /**
  * @author yeshuxin on 17-1-10.
  */
@@ -44,10 +46,14 @@ public class DownloadDispatcher {
      *
      * @param runnable
      */
-    public void enqueue(DownloadRunnable runnable) {
+    public void enqueue(DownloadRunnable runnable,boolean isPause) {
         if (runnable != null) {
             //如果是重复的任务，直接return
             if (isDuplicatedTask(runnable)) {
+                return;
+            }
+            if(isPause){
+                mPausedTasks.add(runnable);
                 return;
             }
 
@@ -101,12 +107,16 @@ public class DownloadDispatcher {
     }
 
 
-    public boolean failTask(DownloadRunnable task) {
+    public boolean failTask(DownloadRunnable task,int error) {
         synchronized (mRunningTasks) {
             if (mRunningTasks.contains(task)) {
                 mRunningTasks.remove(task);
             }
             dispatch();
+            if(error == ErrorType.ERROR_NETWORK){
+                enqueue(task,true);
+                return true;
+            }
             //超出重试次数，则不再继续重试，确保不要过度消耗电量与流量
             if (mFailMap.containsKey(task.getTaskInfo().getUrl())) {
                 int failedTimes = mFailMap.get(task.getTaskInfo().getUrl()) + 1;
@@ -114,12 +124,12 @@ public class DownloadDispatcher {
                     return false;
                 } else {
                     mFailMap.put(task.getTaskInfo().getUrl(), failedTimes);
-                    enqueue(task);
+                    enqueue(task,false);
 
                 }
             } else {
                 mFailMap.put(task.getTaskInfo().getUrl(), 1);
-                enqueue(task);
+                enqueue(task,false);
             }
 
             if (mPendingTasks.size() == 0 && mRunningTasks.size() == 0) {
@@ -231,9 +241,19 @@ public class DownloadDispatcher {
      */
     public void resumeWifiOnlyRequest() {
         if (mPausedTasks != null && mPausedTasks.size() > 0) {
-            mPendingTasks.addAll(mPausedTasks);
-            mPausedTasks.clear();
-            dispatch();
+
+            Iterator<DownloadRunnable> iterator = mPausedTasks.iterator();
+            while (iterator.hasNext()) {
+                DownloadRunnable task = iterator.next();
+                if (task != null && task.getTaskInfo() != null && task.isWifiOnly()) {
+                    iterator.remove();
+                    task.enqueue();
+                    if (!mPendingTasks.contains(task)) {
+                        mPendingTasks.add(task);
+                        dispatch();
+                    }
+                }
+            }
         }
     }
 
@@ -255,7 +275,7 @@ public class DownloadDispatcher {
                         id.equals(task.getTaskInfo().getFileId()) &&
                         url.equals(task.getTaskInfo().getUrl())) {
                     iterator.remove();
-                    task.cancel();
+                    task.enqueue();
                     if (!mPendingTasks.contains(task)) {
                         mPendingTasks.add(task);
                         dispatch();

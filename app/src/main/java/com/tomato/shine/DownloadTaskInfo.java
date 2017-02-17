@@ -20,6 +20,7 @@ public class DownloadTaskInfo {
     private String mMd5;
     private static AtomicInteger mNumber = new AtomicInteger();
     private final String PREFIX = "mi_shop_";
+    private boolean mWifiOnly = true;
 
     public DownloadTaskInfo(String url, String savedFile) {
         this(url, savedFile, TASK_UNCOMPLETE);
@@ -67,6 +68,14 @@ public class DownloadTaskInfo {
             mMd5 = "";
         }
         return mMd5;
+    }
+
+    public boolean isWifiOnly(){
+        return mWifiOnly;
+    }
+
+    public void setWifiOnly(boolean wifiOnly){
+        mWifiOnly = wifiOnly;
     }
 
 }
