@@ -24,6 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".TomotoService">
+            <intent-filter>
+                <action android:name="com.tomoto.shine.TOMOTO_SERVICE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
